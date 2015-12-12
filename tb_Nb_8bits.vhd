@@ -1,6 +1,5 @@
 
--- Test of the DEL switches positions indicator
--- We test a stimulus on the first two switches
+-- Test of the 8 bits shift register
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -11,26 +10,26 @@ end tb_Nb_8Bits;
 architecture Behavioral of tb_Nb_8Bits is
 
 component Nb_8Bits is
-    Port ( CLK : in  STD_LOGIC;
+    Port ( A   : in  STD_LOGIC;
+           CLK : in  STD_LOGIC;
            RAZ : in STD_LOGIC;
-           S   : in STD_LOGIC_VECTOR (7 downto 0);
-           A   : out STD_LOGIC_VECTOR (7 downto 0));
+           Q   : out STD_LOGIC_VECTOR (7 downto 0));
 end component;
 
+signal A : STD_LOGIC :='0';
 signal CLK : STD_LOGIC :='0';
 signal RAZ : STD_LOGIC :='0';
-signal S : STD_LOGIC_VECTOR (7 downto 0);
-signal A : STD_LOGIC_VECTOR (7 downto 0);
+signal Q : STD_LOGIC_VECTOR (7 downto 0);
 
 -- Clock 
 constant CLK_period : time := 10ns;
 begin
 
 uut : Nb_8Bits port map(
+    A => A,
     CLK => CLK,
     RAZ => RAZ,
-    S => S,
-    A => A 
+    Q => Q
     );
 
 -- Clock process definitions
@@ -45,57 +44,29 @@ end process;
 -- Stimulus process
 stim_proc : process
     begin
-    RAZ <= '0';
-    S(0) <= '0';
-    S(1) <= '0';
-    S(2) <= '0';
-    S(3) <= '0';
-    S(4) <= '0';
-    S(5) <= '0';
-    S(6) <= '0';
-    S(7) <= '0';
-    wait for CLK_period;
+    wait for 110*CLK_period;
     
-    S(0) <= '1';
-    wait for CLK_period;
+    A <= '1';
+    wait for 100*CLK_period;
     
-    S(1) <= '1';
-    wait for CLK_period;
+    A <= '0';
+    wait for 100*CLK_period;
     
-    S(0) <= '0';
-    wait for CLK_period;
-    
-    S(1) <= '0';
-    wait for CLK_period;
-    
+    A <= '0';
     RAZ <= '1';
-    wait for CLK_period * 10;
-    
-    S(0) <= '1';
-    wait for CLK_period;
-    
-    S(1) <= '1';
-    wait for CLK_period;
-    
-    S(0) <= '0';
-    wait for CLK_period;
-    
-    S(1) <= '0';
-    wait for CLK_period;
-    
+    wait for 100*CLK_period;
+        
+    A <= '1';
+    wait for 100*CLK_period;
+        
+    A <= '1';
     RAZ <= '0';
-    S(0) <= '1';
-    wait for CLK_period;
+    wait for 100*CLK_period;    
     
-    S(1) <= '1';
-    wait for CLK_period;
+    A <= '0';
+    wait for 100*CLK_period;
     
-    S(0) <= '0';
-    wait for CLK_period;
-    
-    S(1) <= '0';
-    wait for CLK_period;
-    wait;
+    wait;   
 end process;
 
 end Behavioral;
